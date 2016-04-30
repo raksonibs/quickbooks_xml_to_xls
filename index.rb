@@ -75,7 +75,27 @@ class QboXmlService
         
         stringOutput << "<Row></Row>" 
 
-        binding.pry       
+        # column names next
+        columns = innerReport['Columns']["Column"]
+        stringOutput << "<Row>"
+        columns.each do |column|
+          stringOutput << "<Cell><Data ss:Type='String'>#{column['ColTitle']}</Data></Cell>"          
+        end
+        stringOutput << "</Row>"
+        
+        stringOutput << "<Row></Row>" 
+
+        # recursive rows after
+        # rows are built in header, rows, summary
+        binding.pry
+        columns = innerReport['Columns']["Column"]
+        stringOutput << "<Row>"
+        columns.each do |column|
+          stringOutput << "<Cell><Data ss:Type='String'>#{column['ColTitle']}</Data></Cell>"          
+        end
+        stringOutput << "</Row>"
+        
+        stringOutput << "<Row></Row>"       
       end
       stringOutput
     else

@@ -49,7 +49,7 @@ describe QboXmlService do
       @service.write_output_xml_file
       f = File.open('output.xml', 'r+')  
       f_string = f.read
-      f_string.length.must_equal 1689
+      f_string.length.must_equal 1603
     end
   end
 
