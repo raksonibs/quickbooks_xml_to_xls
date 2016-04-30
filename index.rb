@@ -52,11 +52,16 @@ class QboXmlService
   end
 
   def write_output_xml_file
-    output = File.open("./views/output.xml.erb", "a+")
+    output = File.open("./views/blank_template.xml.erb", "r+")
     file_string = output.read
     split_document = file_string.split("<cut>")
-
+    innerText = create_inner_xml
     output.close
+    File.open('output.xml', "w+") {|f| f.write(split_document[0] + innerText + split_document[1])}
+  end
+
+  def create_inner_xml
+    ""
   end
 
   def get_qb_fields(qb_client, m)  
