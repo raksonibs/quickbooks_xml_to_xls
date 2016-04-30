@@ -13,6 +13,7 @@ require_relative 'secrets.rb'
 require 'pry'
 require 'oauth'
 require 'quickbooks-ruby'
+require 'nokogiri'
 
 
 class QboXmlService
@@ -33,10 +34,6 @@ class QboXmlService
     # access_token = request_token.get_access_token(:oauth_verifier => m.oauth_verifier)
     # m.request_token = request_token
   end
-  
-
-
-
 
   def get_hash(qb_oauth_consumer, m)
     qb_client = OAuth::AccessToken.new(@qb_oauth_consumer, @m.access_token, @m.qb_secret)
@@ -79,15 +76,18 @@ class QboXmlService
   end
 
   def form_hash(term)
-    hash = Hash.from_xml(@xml)
-    hash['term'] = term
-    @allQBFields << hash
-    @allQBFields
+    unless @xml.nil?
+      hash = Hash.from_xml(@xml)
+      hash['term'] = term
+      @allQBFields << hash
+      @allQBFields
+    end
   end
 
   def preset_xml
-    stream = File.open("./views/cashflow.xml")
-    @xml = steam.to_s
+    doc = File.open("./views/cashflow.xml") { |f| Nokogiri::XML(f) }
+    doc.remove_namespaces!
+    @xml = doc
   end
 
 end
