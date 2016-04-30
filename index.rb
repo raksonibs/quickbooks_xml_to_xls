@@ -1,20 +1,31 @@
+# example response:
+# ------ QUICKBOOKS-RUBY REQUEST ------
+# METHOD = get
+# RESOURCE = https://sandbox-quickbooks.api.intuit.com/v3/company/123145759723942/reports/CashFlow?date_macro=This+Fiscal+Year-to-date
+# REQUEST BODY:
+# {}
+# REQUEST HEADERS = {"Content-Type"=>"application/xml", "Accept"=>"application/xml", "Accept-Encoding"=>"gzip, deflate"}
+# ------ QUICKBOOKS-RUBY RESPONSE ------
+# RESPONSE CODE = 200
+# RESPONSE BODY:
+
 require_relative 'secrets.rb'
 require 'pry'
 require 'oauth'
 require 'quickbooks-ruby'
 
 m = HashThing.new()
-# qb_oauth_consumer = OAuth::Consumer.new(m.qb_key, m.qb_secret, {
-#     :site                 => "https://oauth.intuit.com",
-#     :request_token_path   => "/oauth/v1/get_request_token",
-#     :authorize_url        => "https://appcenter.intuit.com/Connect/Begin",
-#     :access_token_path    => "/oauth/v1/get_access_token"
-# })
+qb_oauth_consumer = OAuth::Consumer.new(m.qb_key, m.qb_secret, {
+    :site                 => "https://oauth.intuit.com",
+    :request_token_path   => "/oauth/v1/get_request_token",
+    :authorize_url        => "https://appcenter.intuit.com/Connect/Begin",
+    :access_token_path    => "/oauth/v1/get_access_token"
+})
 
 
-# request_token = qb_oauth_consumer.get_request_token
+request_token = qb_oauth_consumer.get_request_token
 
-# # access_token = request_token.get_access_token(:oauth_verifier => m.oauth_verifier)
+# access_token = request_token.get_access_token(:oauth_verifier => m.oauth_verifier)
 # m.request_token = request_token
 
 def get_hash(qb_oauth_consumer, m)
@@ -27,8 +38,7 @@ def assumed_hash(m)
   hash = m.hash
   file_name = "qbo_data.xls"
   stream = File.open("./views/qbo.xml.erb")
-  binding.pry
-  # send_data(stream, :type=>"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", :filename => file_name)
+  send_data(stream, :type=>"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", :filename => file_name)
 end
 
 def get_qb_fields(qb_client, m)  

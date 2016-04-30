@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Report xmlns="http://schema.intuit.com/finance/v3">
+  <Header>
+    <Time>2016-04-26T15:39:24-07:00</Time>
+    <ReportName>CashFlow</ReportName>
+    <DateMacro>this calendar year-to-date</DateMacro>
+    <StartPeriod>2016-01-01</StartPeriod>
+    <EndPeriod>2016-04-26</EndPeriod>
+    <SummarizeColumnsBy>Total</SummarizeColumnsBy>
+    <Currency>USD</Currency>
+    <Option>
+      <Name>NoReportData</Name>
+      <Value>false</Value>
+    </Option>
+  </Header>
+  <Columns>
+    <Column>
+      <ColTitle/>
+      <ColType>Account</ColType>
+    </Column>
+    <Column>
+      <ColTitle>Total</ColTitle>
+      <ColType>Money</ColType>
+    </Column>
+  </Columns>
+  <Rows>
+    <Row type="Section" group="OperatingActivities">
+      <Header>
+        <ColData value="OPERATING ACTIVITIES"/>
+        <ColData value=""/>
+      </Header>
+      <Rows>
+        <Row type="Data" group="NetIncome">
+          <ColData value="Net Income"/>
+          <ColData value="1551.21"/>
+        </Row>
+        <Row type="Section" group="OperatingAdjustments">
+          <Header>
+            <ColData value="Adjustments to reconcile Net Income to Net Cash provided by operations:"/>
+            <ColData value=""/>
+          </Header>
+          <Rows>
+            <Row type="Data">
+              <ColData value="Accounts Receivable (A/R)" id="84"/>
+              <ColData value="-4879.77"/>
+            </Row>
+            <Row type="Data">
+              <ColData value="Inventory Asset" id="81"/>
+              <ColData value="-596.25"/>
+            </Row>
+            <Row type="Data">
+              <ColData value="Accounts Payable (A/P)" id="33"/>
+              <ColData value="1602.67"/>
+            </Row>
+            <Row type="Data">
+              <ColData value="Mastercard" id="41"/>
+              <ColData value="157.72"/>
+            </Row>
+            <Row type="Data">
+              <ColData value="Arizona Dept. of Revenue Payable" id="89"/>
+              <ColData value="0.00"/>
+            </Row>
+            <Row type="Data">
+              <ColData value="Board of Equalization Payable" id="90"/>
+              <ColData value="360.44"/>
+            </Row>
+            <Row type="Data">
+              <ColData value="Loan Payable" id="43"/>
+              <ColData value="4000.00"/>
+            </Row>
+          </Rows>
+        </Row>
+      </Rows>
+      <Summary>
+        <ColData value="Total Adjustments to reconcile Net Income to Net Cash provided by operations:"/>
+        <ColData value="644.81"/>
+      </Summary>
+    </Row>
+    <Row type="Section" group="InvestingActivities">
+      <Header>
+        <ColData value="INVESTING ACTIVITIES"/>
+        <ColData value=""/>
+      </Header>
+      <Rows>
+        <Row type="Data">
+          <ColData value="Truck:Original Cost" id="38"/>
+          <ColData value="-13495.00"/>
+        </Row>
+      </Rows>
+      <Summary>
+        <ColData value="Net cash provided by investing activities"/>
+        <ColData value="-13495.00"/>
+      </Summary>
+    </Row>
+    <Row type="Section" group="FinancingActivities">
+      <Header>
+        <ColData value="FINANCING ACTIVITIES"/>
+        <ColData value=""/>
+      </Header>
+      <Rows>
+        <Row type="Data">
+          <ColData value="Notes Payable" id="44"/>
+          <ColData value="25000.00"/>
+        </Row>
+        <Row type="Data">
+          <ColData value="Opening Balance Equity" id="34"/>
+          <ColData value="-14337.50"/>
+        </Row>
+      </Rows>
+      <Summary>
+        <ColData value="Net cash provided by financing activities"/>
+        <ColData value="10662.50"/>
+      </Summary>
+    </Row>
+    <Row type="Section" group="CashIncrease">
+      <Summary>
+        <ColData value="Net cash increase for period"/>
+        <ColData value="-636.48"/>
+      </Summary>
+    </Row>
+    <Row group="BeginningCash">
+      <ColData value="Cash at beginning of period"/>
+      <ColData value="4700.00"/>
+    </Row>
+    <Row type="Section" group="EndingCash">
+      <Summary>
+        <ColData value="Cash at end of period"/>
+        <ColData value="4063.52"/>
+      </Summary>
+    </Row>
+  </Rows>
+</Report>
