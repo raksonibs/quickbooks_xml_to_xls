@@ -59,9 +59,7 @@ def get_qb_fields(qb_client, m)
         rescue
         end
       end
-      hash = Hash.from_xml(report_service.last_response_xml.to_s)
-      hash['term'] = term
-      allQBFields << hash
+      allQBFields = form_hash(term, allQBFields, xml, hash)
     end
   end
 
@@ -69,5 +67,27 @@ def get_qb_fields(qb_client, m)
 
 end
 
-# get_hash(qb_oauth_consumer, m)
-assumed_hash(m)
+
+class QboXmlService
+  attr_accessor :xml, :allQBFields
+
+  def initialize(xml = nil)
+    @xml = xml
+    @allQBFields = []
+  end
+
+  def form_hash(term)
+    hash = Hash.from_xml(@xml)
+    hash['term'] = term
+    @allQBFields << hash
+    @allQBFields
+  end
+
+  def grab_xml
+  end
+
+  def preset_xml
+    stream = File.open("./views/cashflow.xml")
+  end
+
+end
