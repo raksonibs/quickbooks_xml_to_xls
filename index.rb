@@ -15,7 +15,6 @@ require 'oauth'
 require 'quickbooks-ruby'
 require 'nokogiri'
 
-
 class QboXmlService
   attr_accessor :xml, :allQBFields, :qb_oauth_consumer, :request_token, :m
 
@@ -61,7 +60,27 @@ class QboXmlService
   end
 
   def create_inner_xml
-    ""
+    unless @allQBFields.blank?
+      stringOutput = ""
+      @allQBFields.each do |report|
+        # headers first
+        innerReport = report['Report']
+        headers = innerReport['Header']
+        headers.each do |header_key, header_value|
+          stringOutput << "<Row>"
+          stringOutput << "<Cell><Data ss:Type='String'>#{header_key}</Data></Cell>"
+          stringOutput << "<Cell><Data ss:Type='String'>#{header_value}</Data></Cell>"
+          stringOutput << "</Row>"
+        end
+        
+        stringOutput << "<Row></Row>" 
+
+        binding.pry       
+      end
+      stringOutput
+    else
+      ""
+    end
   end
 
   def get_qb_fields(qb_client, m)  
@@ -88,7 +107,6 @@ class QboXmlService
     end
 
     allQBFields
-
   end
 
   def form_hash(term)
