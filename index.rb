@@ -44,8 +44,17 @@ class QboXmlService
   def assumed_hash
     hash = @m.hash
     file_name = "qbo_data.xls"
-    stream = File.open("./views/qbo.xml.erb")
-    send_data(stream, :type=>"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", :filename => file_name)
+    
+    File.open("../output.xml") do
+      |f| f.write("write your stuff here") 
+    end
+    # send_data(stream, :type=>"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", :filename => file_name)
+  end
+
+  def write_output_xml_file
+    File.open("../output.xml") do
+      |f| f.write("write your stuff here") 
+    end
   end
 
   def get_qb_fields(qb_client, m)  
@@ -84,10 +93,14 @@ class QboXmlService
     end
   end
 
-  def preset_xml
+  def preset_xml_to_string
     doc = File.open("./views/cashflow.xml") { |f| Nokogiri::XML(f) }
     doc.remove_namespaces!
-    @xml = doc
+    @xml = doc.to_s
+  end
+
+  def string_xml_to_xml
+    Nokogiri::XML(@xml)
   end
 
 end
