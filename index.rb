@@ -30,8 +30,7 @@ class QboXmlService
         :access_token_path    => "/oauth/v1/get_access_token"
     })
     @request_token = @qb_oauth_consumer.get_request_token
-    # access_token = request_token.get_access_token(:oauth_verifier => m.oauth_verifier)
-    # m.request_token = request_token
+    @row_data = []
   end
 
   def get_hash(qb_oauth_consumer, m)
@@ -85,28 +84,10 @@ class QboXmlService
         
         stringOutput << "<Row></Row>" 
 
-        # recursive rows after
-        # rows are built in header, rows, summary
-        #  def getRows
-        # header = rows[header]["colData"]
-        #summar = rows[summary]["colData"]
-        # if rows["Rows"]["row"].class.to_s == "Array"
-          # got call data
-      # else
-          # split row
-        # end
-        # return row_data
-        # end
-        #rows = rows["rows"]['Row']
-        # rows = innerReport['Rows']
-
-        # while rows.keys.include?("Row") do 
-        #   rowsInner = rows["Row"]
-        #   rowsInner.each do |megaRow|
-        #     binding.pry
-        #   end
-        # end
-        
+        #now rows
+        rows = parse_rows(innerReport["Rows"]["Row"])
+        @row_data.flatten!
+        binding.pry
         stringOutput << "<Row></Row>"       
       end
       stringOutput
@@ -116,19 +97,43 @@ class QboXmlService
   end
 
   def parse_rows(rows)
-    row_data = []
-    if rows.class.to_s == "Hash"
-      header = rows['Header']["colData"]
-      summary = rows['Summary']["colData"]
-      rowsParsed = parse_rows(rows["Rows"]["Row"])
+    header = []
+    rowsParsed = []
+    summary = []
+    if rows.class.to_s == "Hash" && rows.keys.include?("ColData")
+      return rows["ColData"]
+    elsif rows.class.to_s == "Hash" && rows.keys.include?("Header")
+        header = rows['Header']["ColData"]
+        summary = rows['Summary']["ColData"]
+        rowsParsed = parse_rows(rows["Rows"]["Row"])
+        @row_data << header
+        @row_data << rowsParsed
+        @row_data << summary
     else
-      return rows["Rows"]["Row"]
+      rows.each do |internalRow|
+        begin
+        if internalRow.keys.include?("Header")
+          header = internalRow['Header']["ColData"]
+          summary = internalRow['Summary']["ColData"]
+          rowsParsed = parse_rows(internalRow["Rows"]["Row"])
+        else        
+          if internalRow.keys.include?("ColData")
+            return internalRow["ColData"]
+          elsif internalRow.keys.include?("Summary")
+            return internalRow["Summary"]["ColData"]
+          else
+            return internalRow["Rows"]["Row"]
+          end
+        end  
+        @row_data << header
+        @row_data << rowsParsed
+        @row_data << summary
+        rescue
+          binding.pry
+        end
+      end
     end
-    row_data << header
-    row_data << rowsParsed
-    row_data << summary
-    row_data.flatten!
-    return row_data
+  
   end
 
   def get_qb_fields(qb_client, m)  
@@ -167,7 +172,7 @@ class QboXmlService
   end
 
   def preset_xml_to_string
-    doc = File.open("./views/cashflow.xml") { |f| Nokogiri::XML(f) }
+    doc = File.open("./views/shortened_cashflow.xml") { |f| Nokogiri::XML(f) }
     doc.remove_namespaces!
     @xml = doc.to_s
   end
