@@ -85,7 +85,7 @@ class QboXmlService
         stringOutput << "<Row></Row>" 
 
         #now rows
-        rows = second_parse_rows(innerReport["Rows"]["Row"])
+        rows = parse_rows(innerReport["Rows"]["Row"])
         @row_data.flatten! 
         binding.pry       
         stringOutput << "<Row></Row>"       
@@ -96,11 +96,11 @@ class QboXmlService
     end
   end
 
-  def second_parse_rows(rows)
+  def parse_rows(rows)
     if rows.class.to_s == "Array"
       
       rows.each do |row|
-        second_parse_rows(row)
+        parse_rows(row)
       end
     elsif rows.class.to_s == "Hash"
       # want to get it into a hash
@@ -109,24 +109,24 @@ class QboXmlService
         # header and summary
         @row_data << rows["Header"]["ColData"]
         if rows.keys.include?('Rows')
-          second_parse_rows(rows['Rows']["Row"])
+          parse_rows(rows['Rows']["Row"])
         end
         @row_data << rows["Summary"]["ColData"]
       elsif rows.keys.include?('Summary')
         # just summary
         if rows.keys.include?('Rows')
-          second_parse_rows(rows['Rows']["Row"])
+          parse_rows(rows['Rows']["Row"])
         end
         @row_data << rows["Summary"]["ColData"]
       elsif rows.keys.include?('Header')
         # just header
         @row_data << rows["Header"]["ColData"]
         if rows.keys.include?('Rows')
-          second_parse_rows(rows['Rows']["Row"])
+          parse_rows(rows['Rows']["Row"])
         end
       elsif rows.keys.include?('Rows')
         # rows, need to parse down
-        second_parse_rows(rows['Rows']["Row"])
+        parse_rows(rows['Rows']["Row"])
       elsif rows.keys.include?('ColData')
           # this is our real base case, we want to put the col data in
           @row_data << rows["ColData"]
@@ -135,53 +135,6 @@ class QboXmlService
     else
       
     end
-  end
-
-  def parse_rows(rows)
-    header = []
-    rowsParsed = []
-    summary = []
-    if rows.class.to_s == "Hash" && rows.keys.include?("ColData")
-      # 
-      @row_data << rows["ColData"]
-      return
-    elsif rows.class.to_s == "Hash" && rows.keys.include?("Header")
-        header = rows['Header']["ColData"]
-        summary = rows['Summary']["ColData"]
-        rowsParsed = parse_rows(rows["Rows"]["Row"])
-        @row_data << header
-        @row_data << rowsParsed
-        @row_data << summary
-        # binding.pry
-        return 
-    else
-      rows.each do |internalRow|
-        if internalRow.keys.include?("Header")
-          header = internalRow['Header']["ColData"]
-          summary = internalRow['Summary']["ColData"]
-          rowsParsed = parse_rows(internalRow["Rows"]["Row"])
-          @row_data << header
-          @row_data << rowsParsed
-          @row_data << summary
-          # binding.pry
-          return
-        else        
-          if internalRow.keys.include?("ColData")
-            # binding.pry
-            @row_data << internalRow["ColData"]
-            return
-          elsif internalRow.keys.include?("Summary")
-            # binding.pry
-            @row_data << internalRow["Summary"]["ColData"]
-            return
-          else
-            # binding.pry
-            return parse_rows(internalRow["Rows"]["Row"])
-          end
-        end  
-      end
-    end
-  
   end
 
   def get_qb_fields(qb_client, m)  
@@ -220,7 +173,7 @@ class QboXmlService
   end
 
   def preset_xml_to_string
-    doc = File.open("./views/shortened_cashflow.xml") { |f| Nokogiri::XML(f) }
+    doc = File.open("./views/cashflow.xml") { |f| Nokogiri::XML(f) }
     doc.remove_namespaces!
     @xml = doc.to_s
   end
