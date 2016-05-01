@@ -87,13 +87,25 @@ class QboXmlService
 
         # recursive rows after
         # rows are built in header, rows, summary
-        binding.pry
-        columns = innerReport['Columns']["Column"]
-        stringOutput << "<Row>"
-        columns.each do |column|
-          stringOutput << "<Cell><Data ss:Type='String'>#{column['ColTitle']}</Data></Cell>"          
-        end
-        stringOutput << "</Row>"
+        #  def getRows
+        # header = rows[header]["colData"]
+        #summar = rows[summary]["colData"]
+        # if rows["Rows"]["row"].class.to_s == "Array"
+          # got call data
+      # else
+          # split row
+        # end
+        # return row_data
+        # end
+        #rows = rows["rows"]['Row']
+        # rows = innerReport['Rows']
+
+        # while rows.keys.include?("Row") do 
+        #   rowsInner = rows["Row"]
+        #   rowsInner.each do |megaRow|
+        #     binding.pry
+        #   end
+        # end
         
         stringOutput << "<Row></Row>"       
       end
@@ -101,6 +113,22 @@ class QboXmlService
     else
       ""
     end
+  end
+
+  def parse_rows(rows)
+    row_data = []
+    if rows.class.to_s == "Hash"
+      header = rows['Header']["colData"]
+      summary = rows['Summary']["colData"]
+      rowsParsed = parse_rows(rows["Rows"]["Row"])
+    else
+      return rows["Rows"]["Row"]
+    end
+    row_data << header
+    row_data << rowsParsed
+    row_data << summary
+    row_data.flatten!
+    return row_data
   end
 
   def get_qb_fields(qb_client, m)  
