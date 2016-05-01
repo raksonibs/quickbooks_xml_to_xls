@@ -85,10 +85,19 @@ class QboXmlService
         stringOutput << "<Row></Row>" 
 
         #now rows
-        rows = parse_rows(innerReport["Rows"]["Row"])
+        parse_rows(innerReport["Rows"]["Row"])
         @row_data.flatten! 
-        binding.pry       
-        stringOutput << "<Row></Row>"       
+
+        @row_data.each_with_index do |row, index|
+          if index % 2 == 0 
+            stringOutput << '<Row>'
+            stringOutput << "<Cell><Data ss:Type='String'>#{row['value']}</Data></Cell>"
+          else
+            stringOutput << "<Cell><Data ss:Type='String'>#{row['value']}</Data></Cell>"
+            stringOutput << '</Row>'
+          end
+        end
+        stringOutput << "<Row></Row>"         
       end
       stringOutput
     else
